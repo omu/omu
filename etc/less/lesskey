@@ -1,0 +1,4 @@
+# RUN LESSKEY(1) IF YOU MODIFY
+
+#command
+e	shell "${EDITOR:-vim}" "$DOCFILE"\n

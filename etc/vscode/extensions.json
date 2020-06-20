@@ -1,0 +1,32 @@
+{
+  "recommendations": [
+    // Basic
+    "stkb.rewrap",
+
+    // Shell
+    "jetmartin.bats",
+    "shakram02.bash-beautify",
+    "timonwong.shellcheck",
+
+    // Go
+    "ms-vscode.Go",
+    
+    // Ruby
+    "bung87.vscode-gemfile",
+    "rebornix.ruby",
+
+    // Ruby on Rails
+    "bung87.rails",
+    
+    // YAML
+    "redhat.vscode-yaml",
+    
+    // Markdown
+    "bierner.markdown-mermaid",
+    "davidanson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+
+    // Other
+    "sianglim.slim"
+  ]
+}

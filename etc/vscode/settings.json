@@ -1,0 +1,25 @@
+{
+  // General
+  "files.encoding": "utf8",
+  "files.insertFinalNewline": true,
+  
+  // Rewrap
+  "rewrap.autoWrap.enabled": true,
+  "rewrap.wrappingColumn": 120,
+
+  // Bash
+  "bashBeautify.tabSize": 8,
+  "shellcheck.run": "onSave",
+
+  // Ruby and Ruby on Rails
+  "ruby.format": "rubocop",
+  "ruby.lint": {
+    "rubocop": {
+      "rails": true
+    }
+  },
+  
+  // Markdown
+  "markdown.extension.orderedList.marker": "one",
+  "markdown.extension.preview.autoShowPreviewToSide": true
+}

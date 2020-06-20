@@ -1,0 +1,320 @@
+#!/usr/bin/env bash
+
+set -euo pipefail; [[ -z ${TRACE:-} ]] || set -x
+
+shopt -s nullglob
+
+readonly PROGNAME=${0##*/}
+
+cry() {
+	echo -e >&2 "$*"
+}
+
+die() {
+	cry "$@"
+	exit 1
+}
+
+bug() {
+	cry "BUG: $*"
+	exit 128
+}
+
+hey() {
+	cry '----->' "$@"
+}
+
+[[ ${BASH_VERSION%%.*} -ge 4 ]] || die "Bash version 4 or higher required"
+
+has_func() {
+	[[ $(type -t "$1" || true) == function ]]
+}
+
+is_clean_work_tree() {
+	git rev-parse --verify HEAD >/dev/null &&
+	git update-index -q --ignore-submodules --refresh &&
+	git diff-files --quiet --ignore-submodules &&
+	git diff-index --cached --quiet --ignore-submodules HEAD --
+}
+
+require_inside_sane_work_tree() {
+	git rev-parse --is-inside-work-tree >/dev/null 2>&1 ||
+		die "Must be inside a git work tree"
+	git rev-parse --verify HEAD >/dev/null ||
+		die "Unverified HEAD"
+}
+
+require_clean_work_tree() {
+	is_clean_work_tree || die "Must be inside a clean git work tree"
+}
+
+require_toplevel_directory() {
+	pushd "$(
+		dir=$(git rev-parse --git-dir) && dir=$(cd "$dir" && pwd)/ && echo "${dir%%/.git/*}"
+	)" >/dev/null
+}
+
+declare -g github_user github_token github_repo
+
+initialize() {
+	require_inside_sane_work_tree
+	require_toplevel_directory
+
+	if [[ -n ${GITHUB_USER:-} ]]; then
+		github_user=$GITHUB_USER
+	else
+		github_user=$(git config github.user 2>/dev/null || true)
+	fi
+
+	[[ -z ${GITHUB_TOKEN:-} ]] || github_token=$GITHUB_TOKEN
+
+	local url
+	url=$(git config remote.origin.url 2>/dev/null || true)
+
+	if [[ -n ${url:-} ]]; then
+		url=${url#*github.com/}
+		url=${url%.git}
+
+		github_repo=$url
+	fi
+
+	[[ -n ${github_user:-}  ]] || die 'Couldnt determine Github user'
+	[[ -n ${github_token:-} ]] || die 'Couldnt determine Github token'
+	[[ -n ${github_repo:-}  ]] || die 'Couldnt determine Github repo'
+
+}
+
+declare -Ag command
+
+command.load() {
+	local name=$1
+
+	local func=command:$name
+	has_func "$func" || die "No such command: $name"
+
+	"$func"
+}
+
+command.call() {
+	command.load "$1"
+
+	if has_func initialize; then
+		if has_func shutdown; then
+			trap 'shutdown $?' EXIT HUP INT QUIT TERM
+		fi
+		initialize "$@"
+	fi
+
+	shift
+	call "$@"
+}
+
+command.call_fuzzy() {
+	local may=$1
+	shift
+
+	local found
+
+	local name
+	for name in "${!command[@]}"; do
+		case $name in
+		$may*)
+			found=$name
+			break
+			;;
+		esac
+	done
+
+	[[ -n ${found:-} ]] || die "No command found for: $may"
+	command.call "$found" "$@"
+}
+
+command.print() {
+	local name
+	for name in "${!command[@]}"; do
+		printf '%-12s %s\n' "$name" "${command[$name]-}"
+	done
+}
+
+command[help]='display help'
+command:help() {
+	unset -f initialize shutdown
+
+	call() {
+		if [[ $# -eq 0 ]]; then
+			echo "Usage: $PROGNAME COMMAND [ARGS...]"
+			echo
+			echo "Commands:"
+			echo
+			command.print | sed 's/^/\t/'
+			echo
+			echo "Run '$PROGNAME help COMMAND' to display synopsis for COMMAND."
+		else
+			command.load "$1"
+			if has_func help; then
+				help
+			fi
+		fi >&2
+
+		echo -e "\\nSee $PROGNAME(1) for details." >&2
+	}
+}
+
+command[labels]='setup labels'
+command:labels() {
+	declare -ag labels=(
+		blocked
+		bug
+		chore
+		debt
+		dependencies
+		discuss
+		doc
+		duplicate
+		epic
+		feature
+		help
+		improvement
+		invalid
+		qa
+		question
+		security
+		urgent
+		wontfix
+	)
+
+	declare -Ag color=(
+		[blocked]=ff5050
+		[bug]=c6474e
+		[chore]=fad8c7
+		[debt]=005072
+		[dependencies]=fbca06
+		[discuss]=c5f015
+		[doc]=1da1f2
+		[duplicate]=cccccc
+		[epic]=9855d4
+		[feature]=b4e051
+		[help]=33aa3f
+		[improvement]=41d6c3
+		[invalid]=e6e6e6
+		[qa]=fc2f96
+		[question]=cc317c
+		[security]=ee0701
+		[urgent]=e01d21
+		[wontfix]=ffffff
+	)
+
+	declare -Ag desc=(
+		[blocked]='Bir başka issue/PR tarafından bloklandı'
+		[bug]='Bir sorun veya istenmeyen bir davranış (yüksek öncelikli)'
+		[chore]='Ufak, kısa süreli ve birtakım sıkıcı işler (ör. tipo düzeltmeleri)'
+		[debt]='Çözülmesi için zaman ayrılması gereken teknik borç'
+		[dependencies]='Issue/PR yeni bağımlılıklar barındırıyor veya varolan bağımlılıkları etkiliyor'
+		[discuss]='Karara bağlamak amacıyla açılan teknik tartışma'
+		[doc]='Dokümantasyonla alakalı iş kaydı'
+		[duplicate]='Eşdeğer veya benzer issue/PR daha önce açılmış'
+		[epic]='Parçalı yapılması gereken iş kaydı'
+		[feature]='Issue/PR yeni bir özellik sunuyor'
+		[help]='Ek bilgi veya destek bekleniyor'
+		[improvement]='Var olan bir özelliği iyileştirmeyi hedefliyor'
+		[invalid]='Geçersiz veya alakasız issue/PR'
+		[qa]='QA kapsamında yapılan testlerde belirlenen bir sorun'
+		[question]='Soru sormak amacıyla açıldı'
+		[security]='Güvenlik ile alakalı (ör. potansiyel veya giderilmiş güvenlik açıkları)'
+		[urgent]='Yüksek öncelikli/acil (tek başına kullanılmaz)'
+		[wontfix]='Kabul edilmeyen iş kaydı (etiketlendiğinde iş kaydı kapatılır)'
+	)
+
+	api() {
+		curl --user "$github_user:$github_token" "$@"
+	}
+
+	# Delete default labels
+	delete_old_labels() {
+		hey 'Deleting old labels'
+
+		local -a old_labels
+
+		mapfile -t old_labels < <(
+			api -fsSL --request GET "https://api.github.com/repos/$github_repo/labels" |
+			jq -r '.[] | .name'
+		)
+
+		local label
+		for label in "${old_labels[@]}"; do
+			api --include --request DELETE "https://api.github.com/repos/$github_repo/labels/$label"
+		done
+	}
+
+	create_new_labels() {
+		local label
+
+		hey 'Creating new labels'
+
+		for label in "${labels[@]}"; do
+			api --include \
+			    --header "Accept: application/vnd.github.symmetra-preview+json" \
+			    --request POST \
+			    --data '{"name":"'"$label"'","color":"'"${color[$label]}"'","description":"'"${desc[$label]}"'"}' \
+			    "https://api.github.com/repos/$github_repo/labels"
+		done
+	}
+
+	help() {
+		echo 'labels'
+	}
+
+	call() {
+		command -v jq &>/dev/null || die 'jq required'
+
+		delete_old_labels
+		create_new_labels
+	}
+}
+
+command[templates]='Setup templates'
+command:templates() {
+	help() {
+		echo 'templates'
+	}
+
+	call() {
+		! [[ -d .github    ]] || { rm -rf .github.old;    mv -f .github .github.old;       }
+		! [[ -f .gitimport ]] || { rm -rf .gitimport.old; mv -f .gitimport .gitimport.old; }
+
+		command -v git-import &>/dev/null || die 'git-import required'
+
+		cat >.gitimport <<-EOF
+			- remote: https://github.com/omu/omu
+			  files:
+			    - source: .github
+			      target: .github
+		EOF
+
+		git import
+
+		cry 'Please ensure to git add/commit/push the followings files/directories: .gitimport, .github'
+	}
+}
+
+command[setup]='Setup all'
+command:setup() {
+	help() {
+		echo 'setup'
+	}
+
+	call() {
+		hey 'Setting up labels'
+		"$0" labels
+
+		hey 'Setting up templates'
+		"$0" templates
+	}
+}
+
+main() {
+	[[ $# -eq 0 ]] || command.call_fuzzy "$@"
+	[[ $# -ne 0 ]] || command.call help "$@"
+}
+
+main "$@"

@@ -1,0 +1,39 @@
+- remote: https://github.com/omu/zoo
+  files:
+    - source: scripts/scripts
+      target: bin/scripts
+
+    - source: scripts/README.md
+      target: doc/bin/scripts.md
+
+    - source: doc/doc
+      target: bin/doc
+
+    - source: doc/README.md
+      target: doc/bin/doc.md
+
+    - source: expose/expose
+      target: bin/expose
+
+    - source: expose/README.md
+      target: doc/bin/expose.md
+
+    - source: git-hooks/git-hooks
+      target: bin/git-hooks
+
+    - source: git-hooks/README.md
+      target: doc/bin/git-hooks.md
+
+    - source: git-import/git-import
+      target: bin/git-import
+
+    - source: git-import/README.md
+      target: doc/bin/git-import.md
+
+- remote: https://github.com/omu/rubian
+  files:
+    - source: rubian
+      target: bin/rubian
+
+    - source: README.md
+      target: doc/bin/rubian.md
