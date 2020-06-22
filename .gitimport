@@ -1,4 +1,4 @@
-- remote: https://github.com/omu/zoo
+- remote: https://github.com/omu/x
   files:
     - source: scripts/scripts
       target: bin/scripts
