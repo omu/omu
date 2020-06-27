@@ -1,7 +1,7 @@
 Kurum deposu
 ============
 
-![](https://github.com/omu/omu/workflows/lint/badge.svg)
+![Lint](https://github.com/omu/omu/workflows/lint/badge.svg)
 
 Bu meta depoyu tüm projelerde ortak olarak kullanılabilecek bilgi, kural ve dosyaların (betik, grafik, yapılandırma vb)
 kayıtlanması için kullanıyoruz.  Bu depodaki alt dizinleri değerlendirirken kurumdan bağımsız olarak kurgulanan
