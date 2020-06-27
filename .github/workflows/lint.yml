@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
       - name: Lint for newline at the end of file
         uses: fernandrone/linelint@master
         id: linelint
