@@ -15,7 +15,8 @@ jobs:
         uses: nosborn/github-action-markdown-cli@v1.1.1
         with:
           files: .
-          config_file: ".markdownlintrc"
+          config_file: .markdownlintrc
+          ignore_files: LICENSE.md
       - name: Notify Slack
         uses: 8398a7/action-slack@v3.1.0
         with:
