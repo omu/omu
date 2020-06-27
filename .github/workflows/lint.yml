@@ -12,10 +12,10 @@ jobs:
         uses: fernandrone/linelint@master
         id: linelint
       - name: Lint markdown files
-        uses: actions/setup-node@v1
-        run: |
-          npm install -g markdownlint-cli
-          markdownlint --config .markdownlintrc .
+        uses: nosborn/github-action-markdown-cli@v1.1.1
+        with:
+          files: .
+          config_file: .markdownlintrc
       - name: Notify Slack
         uses: 8398a7/action-slack@v3.1.0
         with:
