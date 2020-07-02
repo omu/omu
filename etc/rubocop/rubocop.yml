@@ -1,5 +1,8 @@
 require: rubocop-performance
 
+AllCops:
+  EnabledByDefault: true
+
 Layout/HashAlignment:
   Enabled: true
   EnforcedHashRocketStyle: table
