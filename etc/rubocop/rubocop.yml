@@ -1,18 +1,13 @@
 require: rubocop-performance
 
+AllCops:
+  EnabledByDefault: true
+
 Layout/HashAlignment:
-  Enabled: true
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 Layout/LineLength:
   Max: 120
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-
-Lint/RaiseException:
-  Enabled: true
-Lint/StructNewOverride:
-  Enabled: true
 
 Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: optional
@@ -21,16 +16,8 @@ Style/AsciiComments:
   Enabled: false
 Style/Documentation:
   Enabled: false
-Style/ExponentialNotation:
-  Enabled: true
 Style/FormatStringToken:
   EnforcedStyle: template
-Style/HashEachMethods:
-  Enabled: false
-Style/HashTransformKeys:
-  Enabled: true
-Style/HashTransformValues:
-  Enabled: true
 Style/Lambda:
   Enabled: false
 Style/LambdaCall:
