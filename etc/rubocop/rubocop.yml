@@ -21,6 +21,8 @@ Style/Copyright:
   Enabled: false
 Style/Documentation:
   Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
 Style/FormatStringToken:
   EnforcedStyle: template
 Style/Lambda:
