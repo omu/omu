@@ -28,8 +28,6 @@ Style/ExponentialNotation:
   Enabled: true
 Style/FormatStringToken:
   EnforcedStyle: template
-Style/HashEachMethods:
-  Enabled: false
 Style/HashTransformKeys:
   Enabled: true
 Style/HashTransformValues:
