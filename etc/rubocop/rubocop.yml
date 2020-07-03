@@ -3,24 +3,39 @@ require: rubocop-performance
 AllCops:
   NewCops: enable
 
+Layout/ClassStructure:
+  Enabled: true
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+Layout/FirstHashElementLineBreak:
+  Enabled: true
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
-Layout/LineLength:
-  Max: 120
 
 Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: optional
 
+Performance/ChainArrayAllocation:
+  Enabled: true
+
 Style/AsciiComments:
   Enabled: false
+Style/CollectionMethods:
+  Enabled: true
 Style/Documentation:
   Enabled: false
 Style/FormatStringToken:
   EnforcedStyle: template
+Style/ImplicitRuntimeError:
+  Enabled: true
 Style/Lambda:
   Enabled: false
 Style/LambdaCall:
   Enabled: false
 Style/ParallelAssignment:
   Enabled: false
+Style/Send:
+  Enabled: true
+Style/SingleLineBlockParams:
+  Enabled: true
