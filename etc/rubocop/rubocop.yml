@@ -27,6 +27,8 @@ Style/Documentation:
   Enabled: false
 Style/FormatStringToken:
   EnforcedStyle: template
+Style/HashAsLastArrayItem:
+  Enabled: false
 Style/ImplicitRuntimeError:
   Enabled: true
 Style/Lambda:
