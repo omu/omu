@@ -1,4 +1,6 @@
-require: rubocop-performance
+require:
+  - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   NewCops: enable
@@ -18,6 +20,9 @@ Naming/MemoizedInstanceVariableName:
 
 Performance/ChainArrayAllocation:
   Enabled: true
+
+Rails/Inquiry:
+  Enabled: false
 
 Style/AsciiComments:
   Enabled: false
