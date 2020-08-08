@@ -1,3 +1,8 @@
+rules:
+  end-of-file:
+    enable: true
+    single-new-line: true
+
 # list of paths to ignore, uses gitignore syntaxes (executes before any rule)
 ignore:
   - .git/
