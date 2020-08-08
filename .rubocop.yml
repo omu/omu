@@ -1,1 +1,4 @@
+require:
+  - rubocop-performance
+
 inherit_from: etc/rubocop/rubocop.yml
