@@ -1,0 +1,4 @@
+# list of paths to ignore, uses gitignore syntaxes (executes before any rule)
+ignore:
+  - .git/
+  - /problem-matcher.json
