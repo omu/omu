@@ -14,12 +14,6 @@ Layout/HashAlignment:
 Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: optional
 
-Performance/ChainArrayAllocation:
-  Enabled: true
-
-Rails/Inquiry:
-  Enabled: false
-
 Style/AsciiComments:
   Enabled: false
 Style/CollectionMethods:
