@@ -1,4 +1,3 @@
-require:
-  - rubocop-performance
-
-inherit_from: etc/rubocop/rubocop.yml
+inherit_from:
+  - etc/rubocop/rubocop.yml
+  - etc/rubocop/rubocop-performance.yml
