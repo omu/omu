@@ -1,8 +1,10 @@
 #### Yapılan düzenlemeler
 
-#### İlgili iş kayıtları
+#### İlgili kayıtlar
 
-#### Değişikliklerin etkileri
+- [X] Yok
+
+#### Düzenlemelerin etkileri
 
 - [ ] Veritabanı
 
@@ -16,7 +18,7 @@
 
 #### Kontrol listesi
 
-- [ ] Değişiklikleri dokümante ettim
+- [ ] Düzenlemeleri dokümante ettim
 - [ ] Testlerini yazdım
 - [ ] Kendimi assign ettim
 - [ ] Review talep ettim
