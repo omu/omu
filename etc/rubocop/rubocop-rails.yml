@@ -1,5 +1,8 @@
 require:
   - rubocop-rails
 
+Rails/EnvironmentVariableAccess:
+  AllowReads: true
+
 Rails/Inquiry:
   Enabled: false
